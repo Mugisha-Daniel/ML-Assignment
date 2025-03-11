@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #247a80;
+            color: #060e06;
+            margin-left: auto;
+        }
+        input, select, button {
+            margin: 20px;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: 2px solid #eef1ee;
+            background-color: #fdfdfe;
+            color: rgb(11, 1, 1);
+        }
+        button:hover {
+            background-color: #55a5ab;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏠 House Price Prediction</h1>
+    <label for="num_rooms">Select Number of Rooms:</label>
+    <select id="num_rooms">
+        <script>
+            for (let i = 1; i <= 20; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
+    </select>
+    <br>
+    <label for="area">Enter Area (in square meters):</label>
+    <input type="number" id="area" placeholder="Enter area" required>
+    <br>
+    <button onclick="predictPrice()">Predict</button>
+    <h2 id="result">Predicted Price: -</h2>
+    
+    <script>
+        async function predictPrice() {
+            const numRooms = document.getElementById("num_rooms").value;
+            const area = document.getElementById("area").value;
+            
+            if (!area) {
+                alert("Please enter the area");
+                return;
+            }
+            
+            const response = await fetch("http://127.0.0.1:5000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ num_rooms: numRooms, area: area })
+            });
+            
+            const data = await response.json();
+            document.getElementById("result").innerText = `Predicted Price: ${data.predicted_price || 'Error'}`;
+        }
+    </script>
+</body>
+</html>
